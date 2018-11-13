@@ -40,7 +40,6 @@ func RegisterAPIRouter(mux *router.Router, api ObjectAPIHandlers) {
 
 	for _, bucket := range routers {
 		/// Object operations
-
 		// HeadObject
 		bucket.Methods("HEAD").Path("/{object:.+}").HandlerFunc(api.HeadObjectHandler)
 		// PutObjectPart - Copy
@@ -106,27 +105,26 @@ func RegisterAPIRouter(mux *router.Router, api ObjectAPIHandlers) {
 		bucket.Methods("GET").HandlerFunc(api.GetBucketLifeCycleHandler).Queries("lifecycle", "")
 		// DelLifeCycleConfig
 		bucket.Methods("DELETE").HandlerFunc(api.DelBucketLifeCycleHandler).Queries("lifecycle", "")
+		// HeadBucket
+		bucket.Methods("HEAD").HandlerFunc(api.HeadBucketHandler)
+		// PostPolicy
+		bucket.Methods("POST").HeadersRegexp("Content-Type", "multipart/form-data*").
+			HandlerFunc(api.PostPolicyBucketHandler)
+		// DeleteMultipleObjects
+		bucket.Methods("POST").HandlerFunc(api.DeleteMultipleObjectsHandler)
+		// DeleteBucket
+		bucket.Methods("DELETE").HandlerFunc(api.DeleteBucketHandler)
+		// PutBucket
+		bucket.Methods("PUT").HandlerFunc(api.PutBucketHandler)
+		// ListObjects
+		bucket.Methods("GET").HandlerFunc(api.ListObjectsHandler)
+
 		// PutBucketPolicy
 		bucket.Methods("PUT").HandlerFunc(api.PutBucketPolicyHandler).Queries("policy", "")
 		// GetBucketPolicy
 		bucket.Methods("GET").HandlerFunc(api.GetBucketPolicyHandler).Queries("policy", "")
 		// DeleteBucketPolicy
 		bucket.Methods("DELETE").HandlerFunc(api.DeleteBucketPolicyHandler).Queries("policy", "")
-
-		bucket.Methods("POST").HeadersRegexp("Content-Type", "multipart/form-data*").
-			HandlerFunc(api.PostPolicyBucketHandler)
-
-		// HeadBucket
-		bucket.Methods("HEAD").HandlerFunc(api.HeadBucketHandler)
-		// PutBucket
-		bucket.Methods("PUT").HandlerFunc(api.PutBucketHandler)
-		// ListObjects
-		bucket.Methods("GET").HandlerFunc(api.ListObjectsHandler)
-		// DeleteMultipleObjects
-		bucket.Methods("POST").HandlerFunc(api.DeleteMultipleObjectsHandler)
-		// DeleteBucket
-		bucket.Methods("DELETE").HandlerFunc(api.DeleteBucketHandler)
-
 	}
 	/// Root operation
 

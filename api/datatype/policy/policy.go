@@ -166,7 +166,11 @@ func ParseConfig(reader io.Reader, bucketName string) (*Policy, error) {
 	var policy Policy
 
 	decoder := json.NewDecoder(reader)
+<<<<<<< HEAD
 	//decoder.DisallowUnknownFields()
+=======
+	decoder.DisallowUnknownFields()
+>>>>>>> 1. add bucket policy
 	if err := decoder.Decode(&policy); err != nil {
 		return nil, err
 	}
