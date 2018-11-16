@@ -1,0 +1,190 @@
+package _go
+
+import (
+	"io/ioutil"
+	"net/http"
+	"os"
+	"strings"
+	"testing"
+)
+
+var (
+	GetObjectPolicy_1 = `{
+			"Version": "2012-10-17",
+			"Statement": [{
+			"Effect": "Allow",
+			"Principal": {"AWS":["*"]},
+			"Action": ["s3:GetObject"],
+			"Resource": [
+				"arn:aws:s3:::` + TEST_BUCKET + `/*"
+			]
+			}]
+		}`
+
+	GetObjectPolicy_2 = `{
+			"Version": "2012-10-17",
+			"Statement": [{
+			"Effect": "Allow",
+			"Principal": {"AWS":["*"]},
+			"Action": ["s3:GetObject"],
+			"Resource": [
+				"arn:aws:s3:::` + TEST_BUCKET + `/test/*"
+			]
+			}]
+		}`
+)
+
+func Test_Bucket_Prepare(t *testing.T) {
+	sc := NewS3()
+	err := sc.MakeBucket(TEST_BUCKET)
+	if err != nil {
+		t.Fatal("MakeBucket err:", err)
+		panic(err)
+	}
+}
+
+func Test_PutBucketPolicy(t *testing.T) {
+	sc := NewS3()
+	err := sc.PutBucketPolicy(TEST_BUCKET, GetObjectPolicy_1)
+	if err != nil {
+		t.Fatal("PutBucketPolicy err:", err)
+	}
+	t.Log("PutBucketPolicy success.")
+
+}
+
+func Test_GetBucketPolicy(t *testing.T) {
+	sc := NewS3()
+	policy, err := sc.GetBucketPolicy(TEST_BUCKET)
+	if err != nil {
+		t.Fatal("GetBucketPolicy err:", err)
+	}
+	p_str := format(policy)
+	origin_p_str := format(GetObjectPolicy_1)
+
+	if p_str != origin_p_str {
+		t.Fatal("GetBucketPolicy is not correct! origin:", origin_p_str, "policy:", p_str)
+	}
+	t.Log("GetBucketPolicy success.")
+}
+
+func Test_DeleteBucketPolicy(t *testing.T) {
+	sc := NewS3()
+	err := sc.DeleteBucketPolicy(TEST_BUCKET)
+	if err != nil {
+		t.Fatal("DeleteBucketPolicy err:", err)
+	}
+	policy, err := sc.GetBucketPolicy(TEST_BUCKET)
+	if err != nil {
+		t.Fatal("GetBucketPolicy err:", err)
+	}
+
+	p_str := format(policy)
+	origin_p_str := format(GetObjectPolicy_1)
+
+	if p_str == origin_p_str {
+		t.Fatal("DeleteBucketPolicy not success:", policy)
+	}
+
+	t.Log("DeleteBucketPolicy success.")
+
+}
+
+func Test_BucketPolicySample_1(t *testing.T) {
+	sc := NewS3()
+	err := sc.PutObject(TEST_BUCKET, TEST_KEY, TEST_VALUE)
+	if err != nil {
+		t.Fatal("PutObject err:", err)
+	}
+
+	//Anonymous to get
+	url := "http://" + *sc.Client.Config.Endpoint + string(os.PathSeparator) + TEST_BUCKET + string(os.PathSeparator) + TEST_KEY
+	res, err := http.Get(url)
+	if err != nil {
+		t.Fatal("httpGet err:", err, "url:", url)
+	}
+
+	//StatusCode should be AccessDenied
+	if res.StatusCode != 403 {
+		t.Fatal("StatusCode should be AccessDenied(403), but the code is:", res.StatusCode)
+	}
+	defer res.Body.Close()
+
+	err = sc.PutBucketPolicy(TEST_BUCKET, GetObjectPolicy_1)
+	if err != nil {
+		t.Fatal("PutBucketPolicy err:", err)
+	}
+
+	policy, err := sc.GetBucketPolicy(TEST_BUCKET)
+	if err != nil {
+		t.Fatal("GetBucketPolicy err:", err)
+	}
+	t.Log(format(policy))
+
+	// After set policy
+	res2, err := http.Get(url)
+	if err != nil {
+		t.Fatal("httpGet err:", err, "url:", url)
+	}
+	//StatusCode should be STATUS_OK
+	if res2.StatusCode != 200 {
+		t.Fatal("StatusCode should be STATUS_OK(200), but the code is:", res.StatusCode)
+	}
+	d, err := ioutil.ReadAll(res2.Body)
+	t.Log("Get object value:", string(d))
+	defer res2.Body.Close()
+
+	err = sc.DeleteBucketPolicy(TEST_BUCKET)
+	if err != nil {
+		t.Fatal("DeleteBucketPolicy err:", err)
+	}
+
+	//After delete policy
+	res3, err := http.Get(url)
+	if err != nil {
+		t.Fatal("httpGet err:", err, "url:", url)
+	}
+
+	//StatusCode should be AccessDenied
+	if res3.StatusCode != 403 {
+		t.Fatal("StatusCode should be AccessDenied(403), but the code is:", res.StatusCode)
+	}
+	defer res3.Body.Close()
+
+	err = sc.DeleteObject(TEST_BUCKET, TEST_KEY)
+	if err != nil {
+		t.Fatal("DeleteObject err:", err)
+	}
+}
+
+//
+//func Test_Sample2(t *testing.T)  {
+//	sc := NewS3()
+//	url := "http://" + *sc.Client.Config.Endpoint + string(os.PathSeparator) + "test" + string(os.PathSeparator) + "main.go"
+//	res, err := http.Get(url)
+//	if err != nil {
+//		t.Fatal("httpGet err:", err, "url:", url)
+//	}
+//	t.Log(res.StatusCode)
+//	d, err := ioutil.ReadAll(res.Body)
+//	t.Log(string(d))
+//	defer res.Body.Close()
+//
+//}
+
+func Test_Bucket_End(t *testing.T) {
+	sc := NewS3()
+	err := sc.DeleteObject(TEST_BUCKET, TEST_KEY)
+	if err != nil {
+		t.Log("DeleteObject err:", err)
+	}
+	err = sc.DeleteBucket(TEST_BUCKET)
+	if err != nil {
+		t.Fatal("DeleteBucket err:", err)
+		panic(err)
+	}
+}
+
+func format(s string) string {
+	return strings.Replace(strings.Replace(strings.Replace(s, " ", "", -1), "\n", "", -1), "\t", "", -1)
+}

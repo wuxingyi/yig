@@ -9,6 +9,7 @@ import (
 type Config struct {
 	AccessKey string `ini:"access_key"`
 	SecretKey string `ini:"secret_key"`
+	EndPoint  string `ini:"host_base"`
 }
 
 func GetDefaultConfigPath() string {
@@ -25,11 +26,11 @@ func loadConfigFile(path string) (*Config, error) {
 	if err != nil {
 		return nil, err
 	}
-	ak := cfg.Section("default").Key("access_key").Value()
-	sk := cfg.Section("default").Key("secret_key").Value()
+
 	config := &Config{
-		AccessKey: ak,
-		SecretKey: sk,
+		AccessKey: cfg.Section("default").Key("access_key").Value(),
+		SecretKey: cfg.Section("default").Key("secret_key").Value(),
+		EndPoint:  cfg.Section("default").Key("host_base").Value(),
 	}
 	return config, nil
 }

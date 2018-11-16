@@ -15,7 +15,7 @@ func SessionNew(config *Config) *s3.S3 {
 		&aws.Config{
 			Credentials: creds,
 			DisableSSL:  aws.Bool(true),
-			Endpoint:    aws.String("s3.test.com"),
+			Endpoint:    aws.String(config.EndPoint),
 			Region:      aws.String("r"),
 		},
 	),

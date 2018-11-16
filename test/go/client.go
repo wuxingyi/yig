@@ -6,13 +6,21 @@ import (
 	"os"
 )
 
-func NewS3() *s3.S3 {
+type S3Client struct {
+	Client *s3.S3
+}
+
+func NewS3() *S3Client {
 	c, err := ReadConfig()
 	if err != nil {
 		panic("New S3 err:" + err.Error())
 	}
 
-	return SessionNew(c)
+	return &S3Client{SessionNew(c)}
+}
+
+func NewS3ByConf(c *Config) *S3Client {
+	return &S3Client{SessionNew(c)}
 }
 
 func ReadConfig() (*Config, error) {
