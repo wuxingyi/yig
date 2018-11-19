@@ -1,7 +1,6 @@
 package _go
 
 import (
-	"io/ioutil"
 	"net/http"
 	"os"
 	"strings"
@@ -99,16 +98,15 @@ func Test_BucketPolicySample_1(t *testing.T) {
 
 	//Anonymous to get
 	url := "http://" + *sc.Client.Config.Endpoint + string(os.PathSeparator) + TEST_BUCKET + string(os.PathSeparator) + TEST_KEY
-	res, err := http.Get(url)
-	if err != nil {
-		t.Fatal("httpGet err:", err, "url:", url)
-	}
 
-	//StatusCode should be AccessDenied
-	if res.StatusCode != 403 {
-		t.Fatal("StatusCode should be AccessDenied(403), but the code is:", res.StatusCode)
+	statusCode, _, err := HTTPRequestToGetObject(url)
+	if err != nil {
+		t.Fatal("GetObject err:", err)
 	}
-	defer res.Body.Close()
+	//StatusCode should be AccessDenied
+	if statusCode != http.StatusForbidden {
+		t.Fatal("StatusCode should be AccessDenied(403), but the code is:", statusCode)
+	}
 
 	err = sc.PutBucketPolicy(TEST_BUCKET, GetObjectPolicy_1)
 	if err != nil {
@@ -119,20 +117,18 @@ func Test_BucketPolicySample_1(t *testing.T) {
 	if err != nil {
 		t.Fatal("GetBucketPolicy err:", err)
 	}
-	t.Log(format(policy))
+	t.Log("Bucket policy:", format(policy))
 
 	// After set policy
-	res2, err := http.Get(url)
+	statusCode, data, err := HTTPRequestToGetObject(url)
 	if err != nil {
-		t.Fatal("httpGet err:", err, "url:", url)
+		t.Fatal("GetObject err:", err)
 	}
 	//StatusCode should be STATUS_OK
-	if res2.StatusCode != 200 {
-		t.Fatal("StatusCode should be STATUS_OK(200), but the code is:", res.StatusCode)
+	if statusCode != http.StatusOK {
+		t.Fatal("StatusCode should be STATUS_OK(200), but the code is:", statusCode)
 	}
-	d, err := ioutil.ReadAll(res2.Body)
-	t.Log("Get object value:", string(d))
-	defer res2.Body.Close()
+	t.Log("Get object value:", string(data))
 
 	err = sc.DeleteBucketPolicy(TEST_BUCKET)
 	if err != nil {
@@ -140,37 +136,20 @@ func Test_BucketPolicySample_1(t *testing.T) {
 	}
 
 	//After delete policy
-	res3, err := http.Get(url)
+	statusCode, _, err = HTTPRequestToGetObject(url)
 	if err != nil {
-		t.Fatal("httpGet err:", err, "url:", url)
+		t.Fatal("GetObject err:", err)
 	}
-
 	//StatusCode should be AccessDenied
-	if res3.StatusCode != 403 {
-		t.Fatal("StatusCode should be AccessDenied(403), but the code is:", res.StatusCode)
+	if statusCode != http.StatusForbidden {
+		t.Fatal("StatusCode should be AccessDenied(403), but the code is:", statusCode)
 	}
-	defer res3.Body.Close()
 
 	err = sc.DeleteObject(TEST_BUCKET, TEST_KEY)
 	if err != nil {
 		t.Fatal("DeleteObject err:", err)
 	}
 }
-
-//
-//func Test_Sample2(t *testing.T)  {
-//	sc := NewS3()
-//	url := "http://" + *sc.Client.Config.Endpoint + string(os.PathSeparator) + "test" + string(os.PathSeparator) + "main.go"
-//	res, err := http.Get(url)
-//	if err != nil {
-//		t.Fatal("httpGet err:", err, "url:", url)
-//	}
-//	t.Log(res.StatusCode)
-//	d, err := ioutil.ReadAll(res.Body)
-//	t.Log(string(d))
-//	defer res.Body.Close()
-//
-//}
 
 func Test_Bucket_End(t *testing.T) {
 	sc := NewS3()
