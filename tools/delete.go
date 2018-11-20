@@ -18,10 +18,10 @@ import (
 const (
 	WATER_LOW        = 120
 	TASKQ_MAX_LENGTH = 200
+	SCAN_HBASE_LIMIT = 50
 )
 
 var (
-
 	logger      *log.Logger
 	RootContext = context.Background()
 	yigs        []*storage.YigStorage
