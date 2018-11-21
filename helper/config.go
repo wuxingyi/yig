@@ -41,6 +41,8 @@ type Config struct {
 	MetaStore                  string
 	TidbInfo                   string
 	KeepAlive                  bool
+	KMSType                    string
+	KMSConfigPath              string
 }
 
 type config struct {
@@ -78,6 +80,8 @@ type config struct {
 	MetaStore                  string
 	TidbInfo                   string
 	KeepAlive                  bool
+	KMSType                    string
+	KMSConfigPath              string
 }
 
 var CONFIG Config
@@ -138,4 +142,6 @@ func SetupConfig() {
 	CONFIG.MetaStore = Ternary(c.MetaStore == "", "hbase", c.MetaStore).(string)
 	CONFIG.TidbInfo = c.TidbInfo
 	CONFIG.KeepAlive = c.KeepAlive
+	CONFIG.KMSType = c.KMSType
+	CONFIG.KMSConfigPath = c.KMSConfigPath
 }

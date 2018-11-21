@@ -3,10 +3,28 @@
 	"ignore": "",
 	"package": [
 		{
+			"checksumSHA1": "iZt1CudSEUMugv2innIuVIA9ySY=",
+			"path": "github.com/go-ini/ini",
+			"revision": "9c8236e659b76e87bf02044d06fde8683008ff3e",
+			"revisionTime": "2018-10-14T23:42:04Z"
+		},
+		{
 			"checksumSHA1": "Z5e8iRObV1jU5e4eeVkJlOPjY68=",
 			"path": "github.com/go-sql-driver/mysql",
 			"revision": "9181e3a86a19bacd63e68d43ae8b7b36320d8092",
 			"revisionTime": "2017-12-04T00:43:26Z"
+		},
+		{
+			"checksumSHA1": "A1MUAAn+izM6ZIuWXJBXhJYdE/8=",
+			"path": "github.com/hashicorp/vault",
+			"revision": "d4367e581fe117356c4d4ac9a8c8c4e514457449",
+			"revisionTime": "2018-11-21T18:10:53Z"
+		},
+		{
+			"checksumSHA1": "GCtOZLPtV3RjPd/vPQB+zLqvqM4=",
+			"path": "github.com/hashicorp/vault/api",
+			"revision": "d4367e581fe117356c4d4ac9a8c8c4e514457449",
+			"revisionTime": "2018-11-21T18:10:53Z"
 		}
 	],
 	"rootPath": "github.com/journeymidnight/yig"

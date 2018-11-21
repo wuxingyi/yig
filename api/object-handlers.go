@@ -35,6 +35,7 @@ import (
 	"github.com/journeymidnight/yig/iam"
 	meta "github.com/journeymidnight/yig/meta/types"
 	"github.com/journeymidnight/yig/signature"
+	"github.com/journeymidnight/yig/crypto"
 )
 
 // supportedGetReqParams - supported request parameters for GET presigned request.
@@ -234,12 +235,12 @@ func (api ObjectAPIHandlers) GetObjectHandler(w http.ResponseWriter, r *http.Req
 	switch object.SseType {
 	case "":
 		break
-	case "KMS":
+	case crypto.S3KMS.String():
 		w.Header().Set("X-Amz-Server-Side-Encryption", "aws:kms")
 		// TODO: not implemented yet
-	case "S3":
+	case crypto.S3.String():
 		w.Header().Set("X-Amz-Server-Side-Encryption", "AES256")
-	case "C":
+	case crypto.SSEC.String():
 		w.Header().Set("X-Amz-Server-Side-Encryption-Customer-Algorithm", "AES256")
 		w.Header().Set("X-Amz-Server-Side-Encryption-Customer-Key-Md5",
 			r.Header.Get("X-Amz-Server-Side-Encryption-Customer-Key-Md5"))
@@ -377,12 +378,12 @@ func (api ObjectAPIHandlers) HeadObjectHandler(w http.ResponseWriter, r *http.Re
 	switch object.SseType {
 	case "":
 		break
-	case "KMS":
+	case crypto.S3KMS.String():
 		w.Header().Set("X-Amz-Server-Side-Encryption", "aws:kms")
 		// TODO not implemented yet
-	case "S3":
+	case crypto.S3.String():
 		w.Header().Set("X-Amz-Server-Side-Encryption", "AES256")
-	case "C":
+	case crypto.SSEC.String():
 		w.Header().Set("X-Amz-Server-Side-Encryption-Customer-Algorithm", "AES256")
 		w.Header().Set("X-Amz-Server-Side-Encryption-Customer-Key-Md5",
 			r.Header.Get("X-Amz-Server-Side-Encryption-Customer-Key-Md5"))
@@ -623,10 +624,15 @@ func (api ObjectAPIHandlers) PutObjectHandler(w http.ResponseWriter, r *http.Req
 	}
 
 	// Parse SSE related headers
-	sseRequest, err := parseSseHeader(r.Header)
-	if err != nil {
-		WriteErrorResponse(w, r, err)
-		return
+	// Suport SSE-S3 and SSE-C now
+	var sseRequest SseRequest
+	var err error
+	if hasServerSideEncryptionHeader(r.Header) && !hasSuffix(objectName, "/") { // handle SSE requests
+		sseRequest, err = parseSseHeader(r.Header)
+		if err != nil {
+			WriteErrorResponse(w, r, err)
+			return
+		}
 	}
 
 	acl, err := getAclFromHeader(r.Header)
@@ -805,10 +811,13 @@ func (api ObjectAPIHandlers) NewMultipartUploadHandler(w http.ResponseWriter, r 
 	// Save metadata.
 	metadata := extractMetadataFromHeader(r.Header)
 
-	sseRequest, err := parseSseHeader(r.Header)
-	if err != nil {
-		WriteErrorResponse(w, r, err)
-		return
+	var sseRequest SseRequest
+	if hasServerSideEncryptionHeader(r.Header) && !hasSuffix(objectName, "/") { // handle SSE requests
+		sseRequest, err = parseSseHeader(r.Header)
+		if err != nil {
+			WriteErrorResponse(w, r, err)
+			return
+		}
 	}
 
 	uploadID, err := api.ObjectAPI.NewMultipartUpload(credential, bucketName, objectName,
@@ -908,13 +917,13 @@ func (api ObjectAPIHandlers) PutObjectPartHandler(w http.ResponseWriter, r *http
 	switch result.SseType {
 	case "":
 		break
-	case "KMS":
+	case crypto.S3KMS.String():
 		w.Header().Set("X-Amz-Server-Side-Encryption", "aws:kms")
 		w.Header().Set("X-Amz-Server-Side-Encryption-Aws-Kms-Key-Id",
 			result.SseAwsKmsKeyIdBase64)
-	case "S3":
+	case crypto.S3.String():
 		w.Header().Set("X-Amz-Server-Side-Encryption", "AES256")
-	case "C":
+	case crypto.SSEC.String():
 		w.Header().Set("X-Amz-Server-Side-Encryption-Customer-Algorithm", "AES256")
 		w.Header().Set("X-Amz-Server-Side-Encryption-Customer-Key-Md5",
 			result.SseCustomerKeyMd5Base64)
@@ -1259,13 +1268,13 @@ func (api ObjectAPIHandlers) CompleteMultipartUploadHandler(w http.ResponseWrite
 	switch result.SseType {
 	case "":
 		break
-	case "KMS":
+	case crypto.S3KMS.String():
 		w.Header().Set("X-Amz-Server-Side-Encryption", "aws:kms")
 		w.Header().Set("X-Amz-Server-Side-Encryption-Aws-Kms-Key-Id",
 			result.SseAwsKmsKeyIdBase64)
-	case "S3":
+	case crypto.S3.String():
 		w.Header().Set("X-Amz-Server-Side-Encryption", "AES256")
-	case "C":
+	case crypto.SSEC.String():
 		w.Header().Set("X-Amz-Server-Side-Encryption-Customer-Algorithm", "AES256")
 		w.Header().Set("X-Amz-Server-Side-Encryption-Customer-Key-Md5",
 			result.SseCustomerKeyMd5Base64)

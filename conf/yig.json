@@ -21,6 +21,8 @@
     "EnableDataCache": true,
     "CephConfigPattern": "/etc/ceph/*.conf",
     "MetaStore": "tidb",
-    "TidbInfo":"root:@tcp(127.0.0.1:4000)/yig",
-    "KeepAlive":true
+    "TidbInfo":"root:@tcp(10.5.0.17:4000)/yig",
+    "KeepAlive":true,
+    "KMSType":"",
+    "KMSConfigPath":""
 }
