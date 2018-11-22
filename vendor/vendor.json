@@ -15,6 +15,54 @@
 			"revisionTime": "2017-12-04T00:43:26Z"
 		},
 		{
+			"checksumSHA1": "uSEfWWTD2fOe/7J2T3AOwGhZwcQ=",
+			"path": "github.com/golang/snappy",
+			"revision": "2e65f85255dbc3072edf28d6b5b8efc472979f5a",
+			"revisionTime": "2018-05-18T05:39:59Z"
+		},
+		{
+			"checksumSHA1": "eYnbfj9EZWjaUg06kU9gF4C0vDU=",
+			"path": "github.com/hashicorp/errwrap",
+			"revision": "8a6fb523712970c966eefc6b39ed2c5e74880354",
+			"revisionTime": "2018-08-24T00:39:10Z"
+		},
+		{
+			"checksumSHA1": "esN+/yzQ3WgQocXIEWBhIvPy2B0=",
+			"path": "github.com/hashicorp/go-cleanhttp",
+			"revision": "e8ab9daed8d1ddd2d3c4efba338fe2eeae2e4f18",
+			"revisionTime": "2018-08-30T03:37:06Z"
+		},
+		{
+			"checksumSHA1": "FLRJdKwV/01yXewm5NCwSSTyC9Q=",
+			"path": "github.com/hashicorp/go-multierror",
+			"revision": "886a7fbe3eb1c874d46f623bfa70af45f425b3d1",
+			"revisionTime": "2018-08-24T00:40:42Z"
+		},
+		{
+			"checksumSHA1": "UY5UVE2+ogEP5mTqJcUF2gdJx2M=",
+			"path": "github.com/hashicorp/go-retryablehttp",
+			"revision": "4502c0ecdaf0b50d857611af23831260f99be6bf",
+			"revisionTime": "2018-11-13T21:00:47Z"
+		},
+		{
+			"checksumSHA1": "97ErmnaVTZaPSal4mnSZP7xB1Qs=",
+			"path": "github.com/hashicorp/go-rootcerts",
+			"revision": "6bb64b370b90e7ef1fa532be9e591a81c3493e00",
+			"revisionTime": "2016-05-03T14:34:40Z"
+		},
+		{
+			"checksumSHA1": "3G1QS27RayWmJRplKLxHc4/W7fc=",
+			"path": "github.com/hashicorp/go-sockaddr",
+			"revision": "9b4c5fa5b10a683339a270d664474b9f4aee62fc",
+			"revisionTime": "2017-10-30T10:43:12Z"
+		},
+		{
+			"checksumSHA1": "lnWM5jV7zXrA7UvBsX4yU3umOxk=",
+			"path": "github.com/hashicorp/hcl",
+			"revision": "65a6292f0157eff210d03ed1bf6c59b190b8b906",
+			"revisionTime": "2018-09-06T18:38:39Z"
+		},
+		{
 			"checksumSHA1": "A1MUAAn+izM6ZIuWXJBXhJYdE/8=",
 			"path": "github.com/hashicorp/vault",
 			"revision": "d4367e581fe117356c4d4ac9a8c8c4e514457449",
@@ -25,6 +73,68 @@
 			"path": "github.com/hashicorp/vault/api",
 			"revision": "d4367e581fe117356c4d4ac9a8c8c4e514457449",
 			"revisionTime": "2018-11-21T18:10:53Z"
+		},
+		{
+			"checksumSHA1": "MQKcgExxbVHltqyTjVbDuHlkfLw=",
+			"path": "github.com/hashicorp/vault/helper/consts",
+			"revision": "d4367e581fe117356c4d4ac9a8c8c4e514457449",
+			"revisionTime": "2018-11-21T18:10:53Z"
+		},
+		{
+			"checksumSHA1": "vL+/HiT4MscW6tonqj5ufc9ICwI=",
+			"path": "github.com/hashicorp/vault/helper/jsonutil",
+			"revision": "d4367e581fe117356c4d4ac9a8c8c4e514457449",
+			"revisionTime": "2018-11-21T18:10:53Z"
+		},
+		{
+			"checksumSHA1": "4PINIDB/Vd357g91+a3RONh2vRk=",
+			"path": "github.com/mitchellh/mapstructure",
+			"revision": "3536a929edddb9a5b34bd6861dc4a9647cb459fe",
+			"revisionTime": "2018-10-05T04:51:35Z"
+		},
+		{
+			"checksumSHA1": "4pnk+QZKRUA9xMks4wgZMMuHNNc=",
+			"path": "github.com/pierrec/lz4",
+			"revision": "623b5a2f4d2a41e411730dcdfbfdaeb5c0c4564e",
+			"revisionTime": "2018-10-27T08:56:11Z"
+		},
+		{
+			"checksumSHA1": "ciXXTIwY5KS7yqrc84nK/81/gGA=",
+			"path": "github.com/pierrec/lz4/internal/xxh32",
+			"revision": "623b5a2f4d2a41e411730dcdfbfdaeb5c0c4564e",
+			"revisionTime": "2018-10-27T08:56:11Z"
+		},
+		{
+			"checksumSHA1": "oceD2r6Gr1dgdX1IAGhEYNZqGJ4=",
+			"path": "github.com/ryanuber/go-glob",
+			"revision": "256dc444b735e061061cf46c809487313d5b0065",
+			"revisionTime": "2017-01-28T01:21:29Z"
+		},
+		{
+			"checksumSHA1": "gTnZiff/sx65gOX7HR6YCLV2OdA=",
+			"path": "golang.org/x/net/http2",
+			"revision": ""
+		},
+		{
+			"checksumSHA1": "sOYolw8BGyeLObXzwLDoVlqquBE=",
+			"path": "golang.org/x/net/http2/hpack",
+			"revision": ""
+		},
+		{
+			"checksumSHA1": "CQYnOtK/oH4Uke2gkTrImLMMl10=",
+			"path": "golang.org/x/net/idna",
+			"revision": ""
+		},
+		{
+			"checksumSHA1": "UOJDYDq9dPMJ3Re3Dc9vvbi+UI0=",
+			"path": "golang.org/x/net/lex/httplex",
+			"revision": ""
+		},
+		{
+			"checksumSHA1": "4gkzaJGGMcr+pwOGk/WJGKbiZU4=",
+			"path": "golang.org/x/time/rate",
+			"revision": "6dc17368e09b0e8634d71cac8168d853e869a0c7",
+			"revisionTime": "2017-07-19T03:46:07Z"
 		}
 	],
 	"rootPath": "github.com/journeymidnight/yig"
