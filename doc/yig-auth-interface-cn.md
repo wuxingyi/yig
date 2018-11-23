@@ -1,26 +1,27 @@
-#YIG与IAM交互的API列表
+# YIG与IAM交互的API列表
 
-##DescribeAccessKeys
+## DescribeAccessKeys
 
 通过AccessKeys获取SecretKeys
 
-###请求格式:
+### 请求格式:
 YIG会发送一个POST请求到IAM, 主要输入是一组accessKeys以及用于YIG和IAM鉴权的一组key/secret(即X-Le-Key和X-Le-Secret).
 ```
+请求头:
 POST / HTTP/1.1
 Host: IAMEndpoint
 X-Le-Key: key
 X-Le-Secret: secret
 content-type: application/json
 
-body
+请求body:
 {
 "action": "DescribeAccessKeys",
 "accessKeys":["hehehehe"]
 }
 ```
 
-####返回值格式:
+#### 返回值格式:
 ```
 
 {
