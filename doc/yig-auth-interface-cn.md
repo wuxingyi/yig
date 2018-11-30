@@ -39,4 +39,4 @@ content-type: application/json
 }
 
 ```
-可以返回多对key/secret组，其中核心字段是accessKey和accessSecret，其他几个字段是补充字段，如果没有就填空字符串。
+可以返回多对key/secret组，其中核心字段是accessKey、accessSecret和name，其他几个字段是补充字段，如果没有就填空字符串。
